@@ -24,6 +24,8 @@ namespace ShadowEngine {
 
 		void initVulkan() {
 			VkHandler::CreateInstance();
+			VkHandler::PickPhysicalDevice();
+			VkHandler::CreateLogicalDevice();
 		}
 
 		void mainLoop() {

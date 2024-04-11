@@ -11,6 +11,8 @@
 
 namespace ShadowEngine {
 	VkInstance VkHandler::Instance;
+	VkPhysicalDevice VkHandler::PhysicalDevice = VK_NULL_HANDLE;
+	VkDevice VkHandler::Device;
 
 	void VkHandler::CreateInstance() {
 		ConsoleDebugger::ConsoleWrite(High, "Initializing Vulkan");
@@ -47,10 +49,10 @@ namespace ShadowEngine {
 	{
 		ConsoleDebugger::ConsoleWrite(High, "Picking GPU");
 
-		VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 		uint32_t deviceCount = 0;
-		std::vector<VkPhysicalDevice> devices(deviceCount);
+		vkEnumeratePhysicalDevices(Instance, &deviceCount, nullptr);
 
+		std::vector<VkPhysicalDevice> devices(deviceCount);
 		vkEnumeratePhysicalDevices(Instance, &deviceCount, devices.data());
 
 		if (deviceCount == 0) {
@@ -59,12 +61,12 @@ namespace ShadowEngine {
 
 		for (const auto& device : devices) {
 			if (IsDeviceSuitable(device)) {
-				physicalDevice = device;
+				PhysicalDevice = device;
 				break;
 			}
 		}
 
-		if (physicalDevice == VK_NULL_HANDLE) {
+		if (PhysicalDevice == VK_NULL_HANDLE) {
 			throw std::runtime_error("failed to find a suitable GPU!");
 		}
 
@@ -74,6 +76,7 @@ namespace ShadowEngine {
 	void VkHandler::Cleanup() {
 		ConsoleDebugger::ConsoleWrite(High, "Cleaning up Vulkan");
 
+		vkDestroyDevice(Device, nullptr);
 		vkDestroyInstance(Instance, nullptr);
 
 		ConsoleDebugger::ConsoleWrite(Medium, "Finished cleaning up Vulkan");
@@ -108,5 +111,28 @@ namespace ShadowEngine {
 		}
 
 		return indices;
+	}
+
+	void VkHandler::CreateLogicalDevice() {
+		QueueFamilyIndices indices = FindQueueFamilies(PhysicalDevice);
+		float queuePriority = 1.0f;
+
+		VkDeviceQueueCreateInfo queueCreateInfo{};
+		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+		queueCreateInfo.queueFamilyIndex = indices.GraphicsFamily.value();
+		queueCreateInfo.queueCount = 1;
+		queueCreateInfo.pQueuePriorities = &queuePriority;
+
+		VkPhysicalDeviceFeatures deviceFeatures{};
+
+		VkDeviceCreateInfo createInfo{};
+		createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+		createInfo.pQueueCreateInfos = &queueCreateInfo;
+		createInfo.queueCreateInfoCount = 1;
+		createInfo.pEnabledFeatures = &deviceFeatures;
+
+		if (vkCreateDevice(PhysicalDevice, &createInfo, nullptr, &Device) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create logical device!");
+		}
 	}
 }
