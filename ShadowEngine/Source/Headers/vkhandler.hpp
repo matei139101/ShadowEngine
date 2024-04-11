@@ -1,22 +1,15 @@
 #pragma once
-#include <optional>
 #include <vulkan/vulkan.h>
+#include "../../enginestructs.hpp"
 
 namespace ShadowEngine {
     class VkHandler {
     public:
         static void CreateInstance();
-        static void Cleanup();
         static void PickPhysicalDevice();
         static void CreateLogicalDevice();
+        static void Cleanup();
     private:
-        struct QueueFamilyIndices {
-            std::optional<uint32_t> GraphicsFamily;
-
-            bool isComplete() {
-                return GraphicsFamily.has_value();
-            }
-        };
         static VkInstance Instance;
         static VkPhysicalDevice PhysicalDevice;
         static VkDevice Device;

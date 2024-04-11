@@ -1,10 +1,8 @@
 #include "../Headers/vkhandler.hpp"
-
-#include <optional>
-
 #include "../Headers/consoledebugger.hpp"
 #include "../../enginestructs.hpp"
 
+#include <optional>
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 #include <vector>
@@ -73,22 +71,13 @@ namespace ShadowEngine {
 		ConsoleDebugger::ConsoleWrite(Medium, "Finished picking GPU");
 	}
 
-	void VkHandler::Cleanup() {
-		ConsoleDebugger::ConsoleWrite(High, "Cleaning up Vulkan");
-
-		vkDestroyDevice(Device, nullptr);
-		vkDestroyInstance(Instance, nullptr);
-
-		ConsoleDebugger::ConsoleWrite(Medium, "Finished cleaning up Vulkan");
-	}
-
 	bool VkHandler::IsDeviceSuitable(const VkPhysicalDevice device) {
 		QueueFamilyIndices indices = FindQueueFamilies(device);
 
 		return indices.isComplete();
 	}
 
-	VkHandler::QueueFamilyIndices VkHandler::FindQueueFamilies(VkPhysicalDevice device) {
+	QueueFamilyIndices VkHandler::FindQueueFamilies(const VkPhysicalDevice device) {
 		QueueFamilyIndices indices;
 
 		uint32_t queueFamilyCount = 0;
@@ -134,5 +123,14 @@ namespace ShadowEngine {
 		if (vkCreateDevice(PhysicalDevice, &createInfo, nullptr, &Device) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create logical device!");
 		}
+	}
+
+	void VkHandler::Cleanup() {
+		ConsoleDebugger::ConsoleWrite(High, "Cleaning up Vulkan");
+
+		vkDestroyDevice(Device, nullptr);
+		vkDestroyInstance(Instance, nullptr);
+
+		ConsoleDebugger::ConsoleWrite(Medium, "Finished cleaning up Vulkan");
 	}
 }
