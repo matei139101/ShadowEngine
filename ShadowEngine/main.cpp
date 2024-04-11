@@ -1,5 +1,4 @@
 #include <iostream>
-#include <stdexcept>
 #include <cstdlib>
 
 #include "Source/Headers/windowmanager.hpp"
@@ -10,7 +9,7 @@ namespace ShadowEngine {
 	class ShadowEngine {
 	public:
 		void run() {
-			//Main run function that handles initiation, runtime and cleanup
+			//Application core
 			initWindow();
 			initVulkan();
 			mainLoop();
@@ -30,7 +29,6 @@ namespace ShadowEngine {
 		}
 
 		void mainLoop() {
-			//Checks if window wishes to close
 			while (!windowManager.ShouldClose()) {
 				glfwPollEvents();
 			}

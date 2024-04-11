@@ -1,3 +1,4 @@
+#pragma once
 #include <vulkan/vulkan.h>
 
 namespace ShadowEngine {
@@ -7,5 +8,7 @@ namespace ShadowEngine {
         void Cleanup();
     private:
         VkInstance instance;
+
+        //void PickPhysicalDevice();
     };
 }

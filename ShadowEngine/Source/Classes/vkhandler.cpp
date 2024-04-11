@@ -1,27 +1,24 @@
 #include "../Headers/vkhandler.hpp"
+#include "../Headers/consoledebugger.hpp"
 
 #include <GLFW/glfw3.h>
 #include <stdexcept>
-#include <iostream>
 
 namespace ShadowEngine {
 	void VKHandler::CreateInstance() {
+		ConsoleDebugger::ConsoleWrite(High, "Initializing Vulkan");
 		VkApplicationInfo appInfo{};
-
 		VkInstanceCreateInfo createInfo{};
+
+		uint32_t glfwExtensionCount = 0;
+		const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
 		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		createInfo.pApplicationInfo = &appInfo;
-
-		uint32_t glfwExtensionCount = 0;
-		const char** glfwExtensions;
-
-		glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-
 		createInfo.enabledExtensionCount = glfwExtensionCount;
 		createInfo.ppEnabledExtensionNames = glfwExtensions;
-
 		createInfo.enabledLayerCount = 0;
+		appInfo.apiVersion = VK_API_VERSION_1_3;
 
 		VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
 
@@ -29,7 +26,7 @@ namespace ShadowEngine {
 			throw std::runtime_error("failed to create instance!");
 		}
 
-		std::cout << "created VK instance";
+		ConsoleDebugger::ConsoleWrite(Low, "Finished initializing Vulkan");
 	}
 
 	void VKHandler::Cleanup() {
