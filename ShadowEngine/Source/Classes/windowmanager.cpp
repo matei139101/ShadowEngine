@@ -16,6 +16,6 @@ namespace ShadowEngine {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 		window = glfwCreateWindow(w, h, name.c_str(), nullptr, nullptr);
-		ConsoleDebugger::ConsoleWrite(High, "Finished initializing window");
+		ConsoleDebugger::ConsoleWrite(Medium, "Finished initializing window");
 	}
 }

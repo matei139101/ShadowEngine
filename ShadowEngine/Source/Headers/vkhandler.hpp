@@ -7,8 +7,6 @@ namespace ShadowEngine {
         void CreateInstance();
         void Cleanup();
     private:
-        VkInstance instance;
-
-        //void PickPhysicalDevice();
+        static VkInstance Instance;
     };
 }
