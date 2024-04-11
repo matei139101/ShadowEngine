@@ -6,8 +6,6 @@ namespace ShadowEngine {
     public:
         static DebugLevelEnum LoggingLevel;
 
-        ConsoleDebugger();
-
         static void ConsoleWrite(DebugLevelEnum, const char*);
     };
 }

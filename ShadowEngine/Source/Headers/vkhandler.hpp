@@ -2,10 +2,10 @@
 #include <vulkan/vulkan.h>
 
 namespace ShadowEngine {
-    class VKHandler {
+    class VkHandler {
     public:
-        void CreateInstance();
-        void Cleanup();
+        static void CreateInstance();
+        static void Cleanup();
     private:
         static VkInstance Instance;
     };

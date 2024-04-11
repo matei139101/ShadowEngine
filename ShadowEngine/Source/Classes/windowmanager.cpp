@@ -2,9 +2,10 @@
 #include "../Headers/consoledebugger.hpp"
 
 namespace ShadowEngine {
+	GLFWwindow* WindowManager::Window = nullptr;
 
 	void WindowManager::Clean() {
-		glfwDestroyWindow(window);
+		glfwDestroyWindow(Window);
 		glfwTerminate();
 	}
 
@@ -15,7 +16,7 @@ namespace ShadowEngine {
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-		window = glfwCreateWindow(w, h, name.c_str(), nullptr, nullptr);
+		Window = glfwCreateWindow(w, h, name.c_str(), nullptr, nullptr);
 		ConsoleDebugger::ConsoleWrite(Medium, "Finished initializing window");
 	}
 }

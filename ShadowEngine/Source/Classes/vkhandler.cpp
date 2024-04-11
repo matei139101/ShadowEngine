@@ -5,9 +5,9 @@
 #include <stdexcept>
 
 namespace ShadowEngine {
-	VkInstance VKHandler::Instance;
+	VkInstance VkHandler::Instance;
 
-	void VKHandler::CreateInstance() {
+	void VkHandler::CreateInstance() {
 		ConsoleDebugger::ConsoleWrite(High, "Initializing Vulkan");
 
 		uint32_t glfwExtensionCount = 0;
@@ -38,7 +38,7 @@ namespace ShadowEngine {
 		ConsoleDebugger::ConsoleWrite(Medium, "Finished initializing Vulkan");
 	}
 
-	void VKHandler::Cleanup() {
+	void VkHandler::Cleanup() {
 		ConsoleDebugger::ConsoleWrite(High, "Cleaning up Vulkan");
 
 		vkDestroyInstance(Instance, nullptr);
