@@ -1,12 +1,12 @@
 #include "../Headers/consoledebugger.hpp"
+#include "../../engineoptions.hpp"
 
 #include <iostream>
 
-namespace ShadowEngine {
-	DebugLevelEnum ConsoleDebugger::LoggingLevel = High;
 
+namespace ShadowEngine {
 	void ConsoleDebugger::ConsoleWrite(const DebugLevelEnum level, const char* message) {
-		if (level <= LoggingLevel) {
+		if (level <= EngineOptions::DebugLevel) {
 			std::cout << message << '\n';
 		}
 	}
