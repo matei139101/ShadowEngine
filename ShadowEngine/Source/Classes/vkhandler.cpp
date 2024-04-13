@@ -3,14 +3,20 @@
 #include "../../enginestructs.hpp"
 
 #include <optional>
+#include <set>
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 #include <vector>
+
+#include "../Headers/windowmanager.hpp"
 
 namespace ShadowEngine {
 	VkInstance VkHandler::Instance;
 	VkPhysicalDevice VkHandler::PhysicalDevice = VK_NULL_HANDLE;
 	VkDevice VkHandler::Device;
+	VkQueue VkHandler::GraphicsQueue;
+	VkQueue VkHandler::PresentQueue;
+	VkSurfaceKHR VkHandler::Surface;
 
 	void VkHandler::CreateInstance() {
 		ConsoleDebugger::ConsoleWrite(High, "Initializing Vulkan");
@@ -92,6 +98,13 @@ namespace ShadowEngine {
 				indices.GraphicsFamily = i;
 			}
 
+			VkBool32 presentSupport = false;
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, Surface, &presentSupport);
+
+			if (presentSupport) {
+				indices.PresentFamily = i;
+			}
+
 			if (indices.isComplete()) {
 				break;
 			}
@@ -104,7 +117,17 @@ namespace ShadowEngine {
 
 	void VkHandler::CreateLogicalDevice() {
 		QueueFamilyIndices indices = FindQueueFamilies(PhysicalDevice);
+		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+		std::set<uint32_t> uniqueQueueFamilies = { indices.GraphicsFamily.value(), indices.PresentFamily.value() };
 		float queuePriority = 1.0f;
+		for (uint32_t queueFamily : uniqueQueueFamilies) {
+			VkDeviceQueueCreateInfo queueCreateInfo{};
+			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+			queueCreateInfo.queueFamilyIndex = queueFamily;
+			queueCreateInfo.queueCount = 1;
+			queueCreateInfo.pQueuePriorities = &queuePriority;
+			queueCreateInfos.push_back(queueCreateInfo);
+		}
 
 		VkDeviceQueueCreateInfo queueCreateInfo{};
 		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
@@ -119,18 +142,30 @@ namespace ShadowEngine {
 		createInfo.pQueueCreateInfos = &queueCreateInfo;
 		createInfo.queueCreateInfoCount = 1;
 		createInfo.pEnabledFeatures = &deviceFeatures;
+		createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+		createInfo.pQueueCreateInfos = queueCreateInfos.data();
 
 		if (vkCreateDevice(PhysicalDevice, &createInfo, nullptr, &Device) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create logical device!");
 		}
+
+		vkGetDeviceQueue(Device, indices.GraphicsFamily.value(), 0, &GraphicsQueue);
+		vkGetDeviceQueue(Device, indices.PresentFamily.value(), 0, &PresentQueue);
 	}
 
 	void VkHandler::Cleanup() {
 		ConsoleDebugger::ConsoleWrite(High, "Cleaning up Vulkan");
 
 		vkDestroyDevice(Device, nullptr);
+		vkDestroySurfaceKHR(Instance, Surface, nullptr);
 		vkDestroyInstance(Instance, nullptr);
 
 		ConsoleDebugger::ConsoleWrite(Medium, "Finished cleaning up Vulkan");
+	}
+
+	void VkHandler::CreateSurface() {
+		if (glfwCreateWindowSurface(Instance, WindowManager::Window, nullptr, &Surface) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create window surface!");
+		}
 	}
 }

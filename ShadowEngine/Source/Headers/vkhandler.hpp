@@ -7,12 +7,16 @@ namespace ShadowEngine {
     public:
         static void CreateInstance();
         static void PickPhysicalDevice();
-        static void CreateLogicalDevice();
         static void Cleanup();
+        static void CreateSurface();
+        static void CreateLogicalDevice();
     private:
         static VkInstance Instance;
         static VkPhysicalDevice PhysicalDevice;
         static VkDevice Device;
+        static VkQueue GraphicsQueue;
+        static VkQueue PresentQueue;
+        static VkSurfaceKHR Surface;
 
         static bool IsDeviceSuitable(VkPhysicalDevice);
         static QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
