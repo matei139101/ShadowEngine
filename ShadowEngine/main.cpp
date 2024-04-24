@@ -8,34 +8,34 @@ namespace ShadowEngine {
 
 	class ShadowEngine {
 	public:
-		void run() {
+		void Run() {
 			//Application core
-			initWindow();
-			initVulkan();
-			mainLoop();
-			cleanup();
+			InitWindow();
+			InitVulkan();
+			MainLoop();
+			Cleanup();
 		}
 
 	private:
 
-		void initWindow() {
+		void InitWindow() {
 			WindowManager::InitWindow(720, 1280, "Vulkan Main Window");
 		}
 
-		void initVulkan() {
+		void InitVulkan() {
 			VkHandler::CreateInstance();
-			VkHandler::CreateSurface();
+			VkHandler::CreateSurface(WindowManager::Window);
 			VkHandler::PickPhysicalDevice();
 			VkHandler::CreateLogicalDevice();
 		}
 
-		void mainLoop() {
+		void MainLoop() {
 			while (!WindowManager::ShouldClose()) {
 				glfwPollEvents();
 			}
 		}
 
-		void cleanup() {
+		void Cleanup() {
 			VkHandler::Cleanup();
 			WindowManager::Clean();
 		}
@@ -46,7 +46,7 @@ int main() {
 	ShadowEngine::ShadowEngine app;
 
 	try {
-		app.run();
+		app.Run();
 	}
 	catch (const std::exception& e) {
 		std::cerr << e.what() << std::endl;

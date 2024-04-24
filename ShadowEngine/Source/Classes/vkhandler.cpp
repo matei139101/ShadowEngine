@@ -8,8 +8,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../Headers/windowmanager.hpp"
-
 namespace ShadowEngine {
 	VkInstance VkHandler::Instance;
 	VkPhysicalDevice VkHandler::PhysicalDevice = VK_NULL_HANDLE;
@@ -49,6 +47,12 @@ namespace ShadowEngine {
 		ConsoleDebugger::ConsoleWrite(Medium, "Finished initializing Vulkan");
 	}
 
+	void VkHandler::CreateSurface(GLFWwindow* window) {
+		if (glfwCreateWindowSurface(Instance, window, nullptr, &Surface) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create window surface!");
+		}
+	}
+
 	void VkHandler::PickPhysicalDevice()
 	{
 		ConsoleDebugger::ConsoleWrite(High, "Picking GPU");
@@ -77,49 +81,12 @@ namespace ShadowEngine {
 		ConsoleDebugger::ConsoleWrite(Medium, "Finished picking GPU");
 	}
 
-	bool VkHandler::IsDeviceSuitable(const VkPhysicalDevice device) {
-		QueueFamilyIndices indices = FindQueueFamilies(device);
-
-		return indices.isComplete();
-	}
-
-	QueueFamilyIndices VkHandler::FindQueueFamilies(const VkPhysicalDevice device) {
-		QueueFamilyIndices indices;
-
-		uint32_t queueFamilyCount = 0;
-		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
-
-		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
-
-		int i = 0;
-		for (const auto& queueFamily : queueFamilies) {
-			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
-				indices.GraphicsFamily = i;
-			}
-
-			VkBool32 presentSupport = false;
-			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, Surface, &presentSupport);
-
-			if (presentSupport) {
-				indices.PresentFamily = i;
-			}
-
-			if (indices.isComplete()) {
-				break;
-			}
-
-			i++;
-		}
-
-		return indices;
-	}
-
 	void VkHandler::CreateLogicalDevice() {
 		QueueFamilyIndices indices = FindQueueFamilies(PhysicalDevice);
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 		std::set<uint32_t> uniqueQueueFamilies = { indices.GraphicsFamily.value(), indices.PresentFamily.value() };
 		float queuePriority = 1.0f;
+
 		for (uint32_t queueFamily : uniqueQueueFamilies) {
 			VkDeviceQueueCreateInfo queueCreateInfo{};
 			queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
@@ -163,9 +130,43 @@ namespace ShadowEngine {
 		ConsoleDebugger::ConsoleWrite(Medium, "Finished cleaning up Vulkan");
 	}
 
-	void VkHandler::CreateSurface() {
-		if (glfwCreateWindowSurface(Instance, WindowManager::Window, nullptr, &Surface) != VK_SUCCESS) {
-			throw std::runtime_error("failed to create window surface!");
+	bool VkHandler::IsDeviceSuitable(const VkPhysicalDevice device) {
+		QueueFamilyIndices indices = FindQueueFamilies(device);
+
+		return indices.isComplete();
+	}
+
+
+	QueueFamilyIndices VkHandler::FindQueueFamilies(const VkPhysicalDevice device) {
+		QueueFamilyIndices indices;
+
+		uint32_t queueFamilyCount = 0;
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+		int i = 0;
+		for (const auto& queueFamily : queueFamilies) {
+			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+				indices.GraphicsFamily = i;
+			}
+
+			VkBool32 presentSupport = false;
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, Surface, &presentSupport);
+
+			if (presentSupport) {
+				indices.PresentFamily = i;
+			}
+
+			if (indices.isComplete()) {
+				break;
+			}
+
+			i++;
 		}
+
+		return indices;
 	}
 }
+ 
