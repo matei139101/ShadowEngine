@@ -17,27 +17,29 @@ namespace ShadowEngine {
 		}
 
 	private:
+		WindowManager WindowManager;
+		VkHandler VkHandler;
 
 		void InitWindow() {
-			WindowManager::InitWindow(720, 1280, "Vulkan Main Window");
+			WindowManager.InitWindow(720, 1280, "Vulkan Main Window");
 		}
 
 		void InitVulkan() {
-			VkHandler::CreateInstance();
-			VkHandler::CreateSurface(WindowManager::Window);
-			VkHandler::PickPhysicalDevice();
-			VkHandler::CreateLogicalDevice();
+			VkHandler.CreateInstance();
+			VkHandler.CreateSurface(WindowManager.Window);
+			VkHandler.PickPhysicalDevice();
+			VkHandler.CreateLogicalDevice();
 		}
 
 		void MainLoop() {
-			while (!WindowManager::ShouldClose()) {
+			while (!WindowManager.ShouldClose()) {
 				glfwPollEvents();
 			}
 		}
 
 		void Cleanup() {
-			VkHandler::Cleanup();
-			WindowManager::Clean();
+			VkHandler.Cleanup();
+			WindowManager.Clean();
 		}
 	};
 }

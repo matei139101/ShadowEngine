@@ -6,10 +6,10 @@
 namespace ShadowEngine {
 	class WindowManager {
 	public:
-		static GLFWwindow* Window;
+		GLFWwindow* Window = nullptr;
 
-		static void InitWindow(int h = 400, int w = 600, std::string name = "Default");
-		static void Clean();
-		static bool ShouldClose() { return glfwWindowShouldClose(Window); }
+		void InitWindow(int h = 400, int w = 600, const std::string& name = "Default");
+		void Clean();
+		bool ShouldClose() { return glfwWindowShouldClose(Window); }
 	};
 }

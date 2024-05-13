@@ -2,14 +2,12 @@
 #include "../Headers/consoledebugger.hpp"
 
 namespace ShadowEngine {
-	GLFWwindow* WindowManager::Window = nullptr;
-
 	void WindowManager::Clean() {
 		glfwDestroyWindow(Window);
 		glfwTerminate();
 	}
 
-	void WindowManager::InitWindow(const int h, const int w, const std::string name) {
+	void WindowManager::InitWindow(const int h, const int w, const std::string& name) {
 		ConsoleDebugger::ConsoleWrite(High, "Initializing window");
 		glfwInit();
 

@@ -9,13 +9,6 @@
 #include <vector>
 
 namespace ShadowEngine {
-	VkInstance VkHandler::Instance;
-	VkPhysicalDevice VkHandler::PhysicalDevice = VK_NULL_HANDLE;
-	VkDevice VkHandler::Device;
-	VkQueue VkHandler::GraphicsQueue;
-	VkQueue VkHandler::PresentQueue;
-	VkSurfaceKHR VkHandler::Surface;
-
 	void VkHandler::CreateInstance() {
 		ConsoleDebugger::ConsoleWrite(High, "Initializing Vulkan");
 

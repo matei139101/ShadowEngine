@@ -7,21 +7,21 @@
 namespace ShadowEngine {
     class VkHandler {
     public:
-        static void CreateInstance();
-        static void PickPhysicalDevice();
-        static void Cleanup();
-        static void CreateSurface(GLFWwindow*);
-        static void CreateLogicalDevice();
+        void CreateInstance();
+        void PickPhysicalDevice();
+        void Cleanup();
+        void CreateSurface(GLFWwindow*);
+        void CreateLogicalDevice();
 
     private:
-        static VkInstance Instance;
-        static VkPhysicalDevice PhysicalDevice;
-        static VkDevice Device;
-        static VkQueue GraphicsQueue;
-        static VkQueue PresentQueue;
-        static VkSurfaceKHR Surface;
+        VkInstance Instance = nullptr;
+        VkPhysicalDevice PhysicalDevice = VK_NULL_HANDLE;
+        VkDevice Device = nullptr;
+        VkQueue GraphicsQueue = nullptr;
+        VkQueue PresentQueue = nullptr;
+        VkSurfaceKHR Surface = nullptr;
 
-        static bool IsDeviceSuitable(VkPhysicalDevice);
-        static QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
+        bool IsDeviceSuitable(VkPhysicalDevice);
+        QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device);
     };
 }
