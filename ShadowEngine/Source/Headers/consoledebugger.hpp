@@ -14,7 +14,7 @@ namespace ShadowEngine {
         static void Log(DebugLevelEnum, const char*);
         static void SaveLog();
     private:
-        static const std::string GetTimeStamp();
-        static const std::string LevelToString(const DebugLevelEnum);
+        static std::string GetTimeStamp();
+        static std::string LevelToString(const DebugLevelEnum);
     };
 }
