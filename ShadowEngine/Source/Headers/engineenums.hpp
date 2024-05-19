@@ -1,9 +1,10 @@
 #pragma once
+#include <string>
 
 namespace ShadowEngine {
-	enum DebugLevelEnum {
-		Low = 1,
-		Medium = 5,
-		High = 10
-	};
-}
+    enum DebugLevelEnum {
+        Low = 0,
+        Medium = 5,
+        High = 10
+    };
+};

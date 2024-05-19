@@ -3,6 +3,7 @@
 
 #include "Source/Headers/windowmanager.hpp"
 #include "Source/Headers/vkhandler.hpp"
+#include "Source/Headers/consoledebugger.hpp"
 
 namespace ShadowEngine {
 
@@ -40,6 +41,7 @@ namespace ShadowEngine {
 		void Cleanup() {
 			VkHandler.Cleanup();
 			WindowManager.Clean();
+			ConsoleDebugger::SaveLog();
 		}
 	};
 }

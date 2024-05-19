@@ -10,7 +10,7 @@
 
 namespace ShadowEngine {
 	void VkHandler::CreateInstance() {
-		ConsoleDebugger::ConsoleWrite(High, "Initializing Vulkan");
+		ConsoleDebugger::Log(Medium, "Initializing Vulkan");
 
 		uint32_t glfwExtensionCount = 0;
 		uint32_t extensionCount = 0;
@@ -37,7 +37,7 @@ namespace ShadowEngine {
 			throw std::runtime_error("failed to create instance!");
 		}
 
-		ConsoleDebugger::ConsoleWrite(Medium, "Finished initializing Vulkan");
+		ConsoleDebugger::Log(High, "Finished initializing Vulkan");
 	}
 
 	void VkHandler::CreateSurface(GLFWwindow* window) {
@@ -48,7 +48,7 @@ namespace ShadowEngine {
 
 	void VkHandler::PickPhysicalDevice()
 	{
-		ConsoleDebugger::ConsoleWrite(High, "Picking GPU");
+		ConsoleDebugger::Log(Medium, "Picking GPU");
 
 		uint32_t deviceCount = 0;
 		vkEnumeratePhysicalDevices(Instance, &deviceCount, nullptr);
@@ -71,7 +71,7 @@ namespace ShadowEngine {
 			throw std::runtime_error("failed to find a suitable GPU!");
 		}
 
-		ConsoleDebugger::ConsoleWrite(Medium, "Finished picking GPU");
+		ConsoleDebugger::Log(High, "Finished picking GPU");
 	}
 
 	void VkHandler::CreateLogicalDevice() {
@@ -114,13 +114,13 @@ namespace ShadowEngine {
 	}
 
 	void VkHandler::Cleanup() {
-		ConsoleDebugger::ConsoleWrite(High, "Cleaning up Vulkan");
+		ConsoleDebugger::Log(Medium, "Cleaning up Vulkan");
 
 		vkDestroyDevice(Device, nullptr);
 		vkDestroySurfaceKHR(Instance, Surface, nullptr);
 		vkDestroyInstance(Instance, nullptr);
 
-		ConsoleDebugger::ConsoleWrite(Medium, "Finished cleaning up Vulkan");
+		ConsoleDebugger::Log(High, "Finished cleaning up Vulkan");
 	}
 
 	bool VkHandler::IsDeviceSuitable(const VkPhysicalDevice device) {
