@@ -10,7 +10,7 @@
 namespace ShadowEngine {
     class ConsoleDebugger {
     public:
-        static std::list<const char*> LoggedData;
+        static std::list<std::string> LoggedData;
         static void Log(DebugLevelEnum, const char*);
         static void SaveLog();
     private:

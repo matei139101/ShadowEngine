@@ -1,39 +1,41 @@
 #include "../Headers/consoledebugger.hpp"
 #include "../../engineoptions.hpp"
 
-#include <iostream>
-
 
 namespace ShadowEngine {
-	std::list<const char*> ConsoleDebugger::LoggedData;
+	std::list<std::string> ConsoleDebugger::LoggedData;
 
 	void ConsoleDebugger::Log(const DebugLevelEnum level, const char* message) {
 		if (level <= EngineOptions::DebugLevel) {
 			std::string fullMessage = GetTimeStamp() + " | ";
 			fullMessage += std::string("DebugLevel: ") + LevelToString(level) + " | ";
 			fullMessage += std::string("Message: ") + message + '\n';
-			LoggedData.push_front(fullMessage.c_str());
+			LoggedData.push_front(fullMessage);
 			std::cout << fullMessage;
 		}
 	}
 
 	void ConsoleDebugger::SaveLog() {
-		std::ofstream logFile;
-		std::string fileName = ConsoleDebugger::GetTimeStamp();
-		fileName += ".log";
+		std::string fileName = "./Logs/" + GetTimeStamp() + ".txt";
 
-		logFile.open(fileName);
+		std::ofstream logFile(fileName.c_str());
 
-		for (std::string log: LoggedData) {
-			logFile << log << "\n";
+		if (logFile) {
+			for (std::string log : LoggedData) {
+				logFile << log;
+			}
+
+			logFile.close();
 		}
-
-		logFile.close();
+		else {
+			std::cout << "The log file couldn't be saved";
+		}
+		
 	}
 
 	std::string ConsoleDebugger::GetTimeStamp() {
 		const std::chrono::time_point timestamp = std::chrono::system_clock::now();
-		const std::string timeStamp = std::format("{:%Y:%m:%d:%H:%M}", timestamp);
+		const std::string timeStamp = std::format("{:%Y-%m-%d-%H-%M}", timestamp);
 
 		return timeStamp;
 	}
