@@ -1,0 +1,11 @@
+[OS]
+Arch
+
+[Desktopmanager]
+Hyprland
+
+[Specs]
+Intel ultra 7 155u
+
+[Packages]
+vulkan-devel vulkan-intel glfw-wayland glm shaderc libxi libxxf86vm
